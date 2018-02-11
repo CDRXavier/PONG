@@ -111,25 +111,6 @@ void titleScreen(){
   printgamemode();
   toggleGameState();
 }
-void player1AI() {
-  if (ballx < WIDTH / 2) {
-  //if ball is at field and is travelling opposite direction very fast
-  if (ballx > WIDTH / 4 && abs(movey) > 1) {
-    //move against it because it is going to bonce
-    if (bally > HEIGHT / 2) player1y -= 1;
-    if (bally < HEIGHT / 2) player1y += 1;
-  } else if (ballx < WIDTH / 2){
-    //If the top of the ball is higher than the center of player's paddle, move the player's paddle up
-    if (bally < player1y + (paddley / 2)) player1y -= 1;
-    //If the bottom of the ball is lower than the center of the player's paddle, move the player's paddle down
-    if (bally  + ballsize > player1y + (paddley / 2)) player1y += 1;
-    //if ball is at middle and is going very fast diagnally
-    }
-  }else if (5 < abs(player1y + paddley / 2 - HEIGHT / 2)){
-    if (player1y + (paddley / 2) > HEIGHT / 2) player1y -=1;
-    if (player1y + (paddley / 2) < HEIGHT / 2) player1y +=1;
-  }
-}
 void ball() {
   //Draw the ball
   arduboy.fillRect(ballx, bally, ballsize, ballsize, 1);
@@ -147,6 +128,24 @@ void ball() {
     movey = -movey;
     bally = HEIGHT - ballsize;
     if(sound)arduboy.tunes.tone(523, 200);
+  }
+}
+void player1AI() {
+  if (ballx < WIDTH / 2) {
+    //if ball is at field and is travelling opposite direction very fast
+    if (ballx > WIDTH / 4 && abs(movey) > 1) {
+      //move against it because it is going to bonce
+      if (bally > HEIGHT / 2) player1y -= 1;
+      if (bally < HEIGHT / 2) player1y += 1;
+    } else if (ballx < WIDTH / 2){
+      //If the top of the ball is higher than the center of player's paddle, move the player's paddle up
+      if (bally < player1y + (paddley / 2)) player1y -= 1;
+      //If the bottom of the ball is lower than the center of the player's paddle, move the player's paddle down
+      if (bally  + ballsize > player1y + (paddley / 2)) player1y += 1;
+    }
+  }else if (5 < abs(player1y + paddley / 2 - HEIGHT / 2)){
+    if (player1y + (paddley / 2) > HEIGHT / 2) player1y -=1;
+    if (player1y + (paddley / 2) < HEIGHT / 2) player1y +=1;
   }
 }
 void player2AI() 
