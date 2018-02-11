@@ -17,7 +17,6 @@ boolean released = 0;
 int ballx = WIDTH / 2;
 int bally = HEIGHT / 2;
 short ballsize = 3;
-short i;
 short movex = 2;
 short movey = 0;
 short paddlex = 3;
@@ -314,6 +313,7 @@ void loop() {
         released = false;
         resetgame();
         gamestate = 0;
+        nonsense = true;
       }
       break;
     case 3: {
@@ -332,7 +332,7 @@ void loop() {
           arduboy.tunes.tone(1318, 400);
         }
         //Change the gamestate
-        if (arduboy.pressed(LEFT_BUTTON) and released) {
+        if (arduboy.pressed(LEFT_BUTTON) && released) {
           released = false;
           resetgame();
           gamestate = 0;
@@ -355,7 +355,6 @@ void loop() {
         released = false;
         gamestate = 0;
         resetgame();
-        nonsense = true;
       }
       //toggle sound
       if (arduboy.pressed(B_BUTTON) && released) {
