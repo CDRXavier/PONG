@@ -9,7 +9,7 @@
 *                                    *
 *************************************/
 #include <Arduboy.h>
-//startup beep at 273
+//startup beep at 281
 Arduboy arduboy;
 //Variables declared here
 short gamestate = 0;
@@ -274,7 +274,7 @@ void gameScreen() {
 }
 void setup() {
   arduboy.begin();
-  //Set the game to 60 frames per second
+  //Set the game to 30 frames per second
   arduboy.setFrameRate(30);
   arduboy.initRandomSeed();
   arduboy.clear();
