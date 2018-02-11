@@ -1,0 +1,20 @@
+The first commercially successful game, now on Arduboy.
+Improved AI based on Original, able to toggle sound, and features TWO PLAYER MODE!!!
+Control follows.
+In home screen:
+UP_BUTTON & DOWN_BUTTON to choose player mode
+RIGHT_BUTTON to start the game
+B_BUTTON to toggle sound (visible from the musical note on top of the screen)
+During game:
+LEFT_BUTTON to pause
+UP_BUTTON to move player 1 up
+DOWN_BUTTON to move player 1 down
+A_BUTTON to move player2 DOWN (if twoPlayer)
+B_BUTTON t o move player2 UP (if twoPlayer)
+If (pause):
+LEFT_BUTTON to exit to home screen
+RIGHT_BUTTON to continue gaming
+B_BUTTON to toggle sound
+HIDDEN FEATURES:
+Doing SOMETHING in home screen allows "DEMO"-computer versus computer match, with a SUPERIOR AI and the classic AI battling (hint: you CANNOT do anything to them, not even the player 2 controls : )
+Open source project by Xavier
