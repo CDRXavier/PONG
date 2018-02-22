@@ -1,5 +1,6 @@
 The first commercially successful game, now on Arduboy.
 Improved AI based on Original, able to toggle sound, and features TWO PLAYER MODE!!!
+First player to goal 5 times wins.
 Control follows.
 In home screen:
 UP_BUTTON & DOWN_BUTTON to choose player mode
@@ -16,5 +17,5 @@ LEFT_BUTTON to exit to home screen
 RIGHT_BUTTON to continue gaming
 B_BUTTON to toggle sound
 HIDDEN FEATURES:
-Doing SOMETHING in home screen allows "DEMO"-computer versus computer match, with a SUPERIOR AI and the classic AI battling (hint: you CANNOT do anything to them, not even the player 2 controls : )
+Doing SOMETHING in home screen allows "DEMO"-computer versus computer match, with the Experimental AI versus the current AI you battle against
 Open source project by Xavier
