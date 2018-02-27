@@ -206,8 +206,8 @@ void player1() {
   if (ballx <= player1x + paddlex && player1y < bally + ballsize && player1y + paddley > bally && ballx >= 0) {
     movey = (bally - player1y - (paddley / 2)) / 2; //Applies spin on the ball
     //limit the horizontal speed
-    if (movey > 2) movey = 2;
-    if (movey < -2) movey = -2;
+    if (movey > 3) movey = 3:
+    if (movey < -3) movey = -3;
     //prevent straight bonce
     if (movey == 0) movey = random(-1, 1);
     //bonce it back
@@ -235,8 +235,8 @@ void player2() {
   if (ballx + ballsize >= player2x && player2y < bally + ballsize && player2y + paddley > bally && ballx + ballsize < WIDTH) {
     movey = (bally - player1y - (paddley / 2)) / 2; //Applies spin on the ball
     //horizontal speed limit
-    if (movey > 2) movey  = 2;
-    if (movey < -2) movey = -2;
+    if (movey > 3) movey  = 3;
+    if (movey < -3) movey = -3;
     //prevent straight bonce
     if (movey == 0) movey = random(-1, 1);
     //bonce it back
