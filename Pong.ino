@@ -9,7 +9,7 @@
 *                                    *
 *************************************/
 #include <Arduboy.h>
-//startup beep at 281
+//startup sound at line 260
 Arduboy arduboy;
 //Variables declared here
 short gamestate = 0;
@@ -17,6 +17,7 @@ boolean released = 0;
 int ballx = WIDTH / 2;
 int bally = HEIGHT / 2;
 short ballsize = 3;
+short i;
 short movex = 2;
 short movey = 0;
 short paddlex = 3;
@@ -29,12 +30,9 @@ short player1score = 0;
 short player2score = 0;
 boolean twoplayer = false;
 boolean demo = false;
-boolean sound = true;
 boolean nonsense = true;
-
 void resetgame() {
-  ballx = WIDTH / 2 - (ballsize / 2);
-  bally = HEIGHT / 2 - (ballsize / 2);
+  ballx = WIDTH / 2;
   player1score = 0;
   player2score = 0;
   player1y = player2y = HEIGHT / 2 - paddley / 2;
@@ -48,7 +46,6 @@ void printgamemode() {
       arduboy.setTextSize(1);
       arduboy.print("DEMO");
       arduboy.setTextSize(3);
-      twoplayer = false;
   }
   //if not (it should not be)
   else
@@ -76,7 +73,6 @@ void toggleGameState() {
   //toggle demo
   if (((arduboy.pressed(UP_BUTTON) || arduboy.pressed(DOWN_BUTTON)) && released) && arduboy.pressed(A_BUTTON)) {
     released = false;
-    if(sound)arduboy.tunes.tone(523, 200);
     if (demo) demo = false;
     else {
       twoplayer = false;
@@ -86,29 +82,31 @@ void toggleGameState() {
   //toggle twoplayer
   if ((arduboy.pressed(UP_BUTTON) || arduboy.pressed(DOWN_BUTTON)) && released && !demo) {
     released = false;
-    if(sound)arduboy.tunes.tone(523, 200);
+    arduboy.tunes.tone(523, 200);
     if (twoplayer) twoplayer = false;
     else twoplayer = true;
   }
   //toggle sound
-  if (arduboy.pressed(B_BUTTON) && released) {
+  if (arduboy.pressed(A_BUTTON) && released) {
     released = false;
-    if(sound) sound = false;
-    else sound = true;
+    if (arduboy.audio.enabled())arduboy.audio.off();
+    else arduboy.audio.on();
   }
 }
-void titleScreen(){
-  //Title screen
-  arduboy.setCursor(30, 15);
-  arduboy.setTextSize(3);
-  arduboy.print("PONG");
-  //Change the gamestate
-  if (arduboy.pressed(RIGHT_BUTTON) && released) {
-    released = false;
-    gamestate = 1;
+void player1AI() {
+  if (ballx < WIDTH / 2) {
+  //if ball is at field and is travelling opposite direction very fast
+  if (ballx > WIDTH / 4 && abs(movey) > 1) {
+    //move with it because it is going to bonce
+    if (bally > HEIGHT / 2) player1y -= 1;
+    if (bally < HEIGHT / 2) player1y += 1;
+  } else if (ballx < WIDTH / 2){
+    //If the top of the ball is higher than the center of player's paddle, move the player's paddle up
+    if (bally < player1y + (paddley / 2)) player1y -= 1;
+    //If the bottom of the ball is lower than the center of the player's paddle, move the player's paddle down
+    if (bally  + ballsize > player1y + (paddley / 2)) player1y += 1;
+    }
   }
-  printgamemode();
-  toggleGameState();
 }
 void ball() {
   //Draw the ball
@@ -120,31 +118,13 @@ void ball() {
   if (bally <= 0) {
     movey = -movey;
     bally = 0;
-    if(sound)arduboy.tunes.tone(523, 200);
+    arduboy.tunes.tone(523, 200);
   }
   //Reflect the ball off of the bottom of the screen
   if (bally + ballsize >= HEIGHT) {
     movey = -movey;
     bally = HEIGHT - ballsize;
-    if(sound)arduboy.tunes.tone(523, 200);
-  }
-}
-void player1AI() {
-  if (ballx < WIDTH / 2) {
-    //if ball is at field and is travelling opposite direction very fast
-    if (ballx > WIDTH / 4 && abs(movey) > 1) {
-      //move against it because it is going to bonce
-      if (bally > HEIGHT / 2) player1y -= 1;
-      if (bally < HEIGHT / 2) player1y += 1;
-    } else if (ballx < WIDTH / 2){
-      //If the top of the ball is higher than the center of player's paddle, move the player's paddle up
-      if (bally < player1y + (paddley / 2)) player1y -= 1;
-      //If the bottom of the ball is lower than the center of the player's paddle, move the player's paddle down
-      if (bally  + ballsize > player1y + (paddley / 2)) player1y += 1;
-    }
-  }else if (5 < abs(player1y + paddley / 2 - HEIGHT / 2)){
-    if (player1y + (paddley / 2) > HEIGHT / 2) player1y -=1;
-    if (player1y + (paddley / 2) < HEIGHT / 2) player1y +=1;
+    arduboy.tunes.tone(523, 200);
   }
 }
 void player2AI() 
@@ -167,7 +147,7 @@ void score() {
     ballx = WIDTH / 2;
     movey = 0;
     bally = HEIGHT / 2;
-    if(sound)arduboy.tunes.tone(175, 200);
+    arduboy.tunes.tone(175, 200);
     //Give the player2 a point
     player2score = player2score + 1;
   }
@@ -177,7 +157,7 @@ void score() {
     ballx = WIDTH / 2;
     movey = 0;
     bally = HEIGHT / 2;
-    if(sound)arduboy.tunes.tone(175, 200);
+    arduboy.tunes.tone(175, 200);
     //Give the player1 a point
     player1score = player1score + 1;
   }
@@ -206,14 +186,14 @@ void player1() {
   if (ballx <= player1x + paddlex && player1y < bally + ballsize && player1y + paddley > bally && ballx >= 0) {
     movey = (bally - player1y - (paddley / 2)) / 2; //Applies spin on the ball
     //limit the horizontal speed
-    if (movey > 3) movey = 3:
+    if (movey > 3) movey = 3;
     if (movey < -3) movey = -3;
     //prevent straight bonce
     if (movey == 0) movey = random(-1, 1);
     //bonce it back
     movex = -movex;
     //sounds
-    if(sound)arduboy.tunes.tone(200, 200);
+    arduboy.tunes.tone(200, 200);
   }
 }
 void player2() {
@@ -227,7 +207,7 @@ void player2() {
   }
   //if not in two player mode
   else
-    player2AI();
+    player2AI();  
   //keep the paddle inside the game
   if (player2y <= 0) player2y = 0;
   if (player2y >= HEIGHT - paddley) player2y = HEIGHT - paddley;
@@ -241,7 +221,7 @@ void player2() {
     if (movey == 0) movey = random(-1, 1);
     //bonce it back
     movex = -movex;
-    if(sound)arduboy.tunes.tone(200, 200);
+    arduboy.tunes.tone(200, 200);
   }
 }
 void gameScreen() {
@@ -280,30 +260,38 @@ void setup() {
   delay(160);
   arduboy.tunes.tone(1318, 400);
 }
-
+　
 void loop() {
   //Prevent the Arduboy from running too fast
-  if (!arduboy.nextFrame()) {
-    return;
-  }
+  if (!arduboy.nextFrame()) return;
   arduboy.clear();
   switch ( gamestate ) {
     case 0:
-      titleScreen();
+      //Title screen
+      arduboy.setCursor(30, 15);
+      arduboy.setTextSize(3);
+      arduboy.print("PONG");
+      //Change the gamestate
+      if (arduboy.pressed(RIGHT_BUTTON) && released) {
+        released = false;
+        gamestate = 1;
+      }
+      printgamemode();
+      toggleGameState();
       break;
     case 1:
       gameScreen();
       break;
-    case 2:
+    case 2: {
+      //Win screen
       arduboy.setCursor(20, 20);
       arduboy.setTextSize(2);
       arduboy.print("PLAYER 1");
       arduboy.setCursor(40, 40);
       arduboy.print("WINS!");
       arduboy.setTextSize(3);
-      if (sound && nonsense) {
+      if (nonsense) {
         nonsense = false;
-        delay(100);
         arduboy.tunes.tone(987, 160);
         delay(160);
         arduboy.tunes.tone(1318, 400);
@@ -311,11 +299,12 @@ void loop() {
       //Change the gamestate
       if (arduboy.pressed(LEFT_BUTTON) and released) {
         released = false;
+        nonsense = true;
         resetgame();
         gamestate = 0;
-        nonsense = true;
       }
-      break;
+    }
+    break;
     case 3: {
         //Game over screen
         arduboy.setCursor(20, 20);
@@ -324,19 +313,18 @@ void loop() {
         arduboy.setCursor(40, 40);
         arduboy.print("WINS!");
         arduboy.setTextSize(3);
-        if (sound && nonsense) { 
+        if (nonsense) {
           nonsense = false;
-          delay(100);
           arduboy.tunes.tone(987, 160);
           delay(160);
           arduboy.tunes.tone(1318, 400);
         }
         //Change the gamestate
-        if (arduboy.pressed(LEFT_BUTTON) && released) {
+        if (arduboy.pressed(LEFT_BUTTON) and released) {
           released = false;
           resetgame();
-          gamestate = 0;
           nonsense = true;
+          gamestate = 0;
         }
       }
       break;
@@ -353,25 +341,24 @@ void loop() {
       }
       if (arduboy.pressed(LEFT_BUTTON) && released) {
         released = false;
-        gamestate = 0;
         resetgame();
+        gamestate = 0;
       }
-      //toggle sound
-      if (arduboy.pressed(B_BUTTON) && released) {
+      if (arduboy.pressed(A_BUTTON) && released) {
         released = false;
-        if(sound) sound = false;
-        else sound = true;
+        if (arduboy.audio.enabled()) arduboy.audio.off();
+        else arduboy.audio.on();
       }
     }
   }
-  //print a note if sound is on
-  if (sound) {
-    arduboy.drawRect(WIDTH / 2 + 2, 3, 2, 2, 1);
-    arduboy.drawLine(WIDTH / 2 + 3,0,WIDTH / 2 + 3,3,1);
-    arduboy.drawPixel(WIDTH / 2 + 4, 1, 1);
+  if (arduboy.audio.enabled()) {
+    arduboy.drawRect(WIDTH / 2 + 3,3,2,2,1);
+    arduboy.drawLine(WIDTH / 2 + 4, 0, WIDTH / 2 + 4, 4,1);
+    arduboy.drawPixel(WIDTH / 2 + 5,1,1);
   }
   //Check if the button is being held down
-  if (arduboy.notPressed(LEFT_BUTTON) && arduboy.notPressed(RIGHT_BUTTON) && arduboy.notPressed(UP_BUTTON) && arduboy.notPressed(DOWN_BUTTON) && arduboy.notPressed(B_BUTTON))
+  if (arduboy.notPressed(LEFT_BUTTON) && arduboy.notPressed(RIGHT_BUTTON) && arduboy.notPressed(UP_BUTTON) && arduboy.notPressed(DOWN_BUTTON) && arduboy.notPressed(B_BUTTON) && arduboy.notPressed(A_BUTTON))
     released = true;
   arduboy.display();
 }
+　
