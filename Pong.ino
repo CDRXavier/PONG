@@ -33,11 +33,12 @@ boolean demo = false;
 boolean nonsense = true;
 void resetgame() {
   ballx = WIDTH / 2;
+  bally = HEIGHT / 2;
   player1score = 0;
   player2score = 0;
   player1y = player2y = HEIGHT / 2 - paddley / 2;
   if (random(0, 2) >= 1) movex = 2;
-  else movex - -2;
+  else movex = -2;
   movey = 0;
 }
 void printgamemode() {
@@ -256,11 +257,12 @@ void setup() {
   arduboy.setFrameRate(30);
   arduboy.initRandomSeed();
   arduboy.clear();
+  if (arduboy.audio.enabled()) arduboy.audio.on();
+  else arduboy.audio.off();
   arduboy.tunes.tone(987, 160);
   delay(160);
   arduboy.tunes.tone(1318, 400);
 }
-　
 void loop() {
   //Prevent the Arduboy from running too fast
   if (!arduboy.nextFrame()) return;
@@ -361,4 +363,3 @@ void loop() {
     released = true;
   arduboy.display();
 }
-　
