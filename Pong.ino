@@ -92,6 +92,7 @@ void toggleGameState() {
     released = false;
     if (arduboy.audio.enabled())arduboy.audio.off();
     else arduboy.audio.on();
+    arduboy.audio.saveOnOff();
   }
 }
 void player1AI() {
@@ -350,6 +351,7 @@ void loop() {
         released = false;
         if (arduboy.audio.enabled()) arduboy.audio.off();
         else arduboy.audio.on();
+        arduboy.audio.saveOnOff();
       }
     }
   }
